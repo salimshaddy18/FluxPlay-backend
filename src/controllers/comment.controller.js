@@ -6,9 +6,64 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 //get all comments for a video
 const getVideoComments = asyncHandler(async (req, res) => {
-    const { videoId } = req.params
-    const { page = 1, limit = 10 } = req.query
-    req.status(200).send("Hello from getVideoComments")
+    const { videoId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+
+    if (!mongoose.Types.ObjectId.isValid(videoId)) {
+        throw new ApiError(400, "Invalid video ID");
+    }
+
+    const skip = (page - 1) * limit;
+
+    const comments = await Comment.aggregate([
+        { $match: { video: new mongoose.Types.ObjectId(videoId) } },
+        {
+            $lookup: {
+                from: "users",
+                localField: "user",
+                foreignField: "_id",
+                as: "user"
+            }
+        },
+        { $unwind: "$user" },
+        {
+            $lookup: {
+                from: "likes",
+                let: { commentId: "$_id" },
+                pipeline: [
+                    { $match: { $expr: { $eq: ["$comment", "$$commentId"] } } }
+                ],
+                as: "likes"
+            }
+        },
+        {
+            $addFields: {
+                totalLikes: { $size: "$likes" }
+            }
+        },
+        {
+            $project: {
+                content: 1,
+                createdAt: 1,
+                "user._id": 1,
+                "user.username": 1,
+                "user.avatar": 1,
+                totalLikes: 1
+            }
+        },
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: parseInt(limit) }
+    ]);
+
+    const total = await Comment.countDocuments({ video: videoId });
+
+    return res.status(200).json(new ApiResponse(200, {
+        comments,
+        total,
+        page: Number(page),
+        totalPages: Math.ceil(total / limit)
+    }, "Comments fetched successfully"));
 })
 
 //add a comment to a video
