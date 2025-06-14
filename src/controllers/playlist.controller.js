@@ -11,6 +11,10 @@ const createPlaylist = asyncHandler(async (req, res) => {
     const videoId = req.params.videoId;
     const userId = req.user._id;
 
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(400, "Invalid user ID"); 
+    }
+
     if (!name || name.trim() === "") {
         throw new ApiError(400, "Playlist name is required");
     }
