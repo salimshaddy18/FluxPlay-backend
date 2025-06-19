@@ -2,6 +2,8 @@ import express from "express";
 import {
     getAllVideos,
     publishAVideo,
+    getMyVideos,
+    getUserVideos,
     getVideoById,
     updateVideo,
     deleteVideo,
@@ -25,6 +27,10 @@ router.route("/upload-video").post(verifyJWT, upload.fields([
     },
 
 ]), publishAVideo);
+
+router.get("/my-videos", verifyJWT, getMyVideos);
+
+router.get("/user/:userId/videos", verifyJWT, getUserVideos);
 
 router.route('/user-video/:videoId').get(verifyJWT, getVideoById);
 

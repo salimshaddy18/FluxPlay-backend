@@ -107,9 +107,15 @@ const publishAVideo = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Video file is required")
     }
 
-    const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
+    const thumbnailFile = req.files?.thumbnail?.[0];
+    const thumbnailLocalPath = thumbnailFile?.path;
     if (!thumbnailLocalPath) {
-        throw new ApiError(400, "Thumbnail image is required")
+        throw new ApiError(400, "Thumbnail image is required");
+    }
+
+    //added MIME type check for thumbnail
+    if (!thumbnailFile.mimetype?.startsWith("image/")) {
+        throw new ApiError(400, "Only image files are allowed for thumbnail");
     }
 
     // Upload video to Cloudinary
@@ -150,6 +156,38 @@ const publishAVideo = asyncHandler(async (req, res) => {
         new ApiResponse(201, populatedVideo, "Video published successfully")
     )
 })
+
+//get my videos
+const getMyVideos = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+
+    const videos = await Video.find({ owner: userId })
+        .select("title description duration videoFile thumbnail createdAt")
+        .populate("owner", "username avatar")
+        .sort({ createdAt: -1 });
+
+    res.status(200).json(
+        new ApiResponse(200, videos, "Your uploaded videos fetched successfully")
+    );
+});
+
+//get user videos by userId
+const getUserVideos = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(400, "Invalid user ID");
+    }
+
+    const videos = await Video.find({ owner: userId })
+        .select("title description duration videoFile thumbnail createdAt")
+        .populate("owner", "username avatar")
+        .sort({ createdAt: -1 });
+
+    res.status(200).json(
+        new ApiResponse(200, videos, "User's uploaded videos fetched successfully")
+    );
+});
 
 //get video by id
 const getVideoById = asyncHandler(async (req, res) => {
@@ -285,6 +323,8 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 export {
     getAllVideos,
     publishAVideo,
+    getMyVideos,
+    getUserVideos,
     getVideoById,
     updateVideo,
     deleteVideo,
