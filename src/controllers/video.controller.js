@@ -102,22 +102,24 @@ const publishAVideo = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Title and description are required")
     }
 
-    if (!req.files || !req.files.video) {
+    const videolocalPath = req.files?.videoFile[0]?.path;
+    if (!videolocalPath) {
         throw new ApiError(400, "Video file is required")
     }
 
-    if (!req.files.thumbnail) {
+    const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
+    if (!thumbnailLocalPath) {
         throw new ApiError(400, "Thumbnail image is required")
     }
 
     // Upload video to Cloudinary
-    const videoUploadResult = await uploadOnCloudinary(req.files.video.tempFilePath);
+    const videoUploadResult = await uploadOnCloudinary(videolocalPath);
     if (!videoUploadResult) {
         throw new ApiError(500, "Failed to upload video to Cloudinary");
     }
 
     // Upload thumbnail to Cloudinary
-    const thumbnailUploadResult = await uploadOnCloudinary(req.files.thumbnail.tempFilePath);
+    const thumbnailUploadResult = await uploadOnCloudinary(thumbnailLocalPath);
     if (!thumbnailUploadResult) {
         throw new ApiError(500, "Failed to upload thumbnail to Cloudinary");
     }
@@ -126,12 +128,13 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const newVideo = new Video({
         title: title.trim(),
         description: description.trim(),
+        duration: videoUploadResult.duration,
         videoFile: videoUploadResult.secure_url,
         videoPublicId: videoUploadResult.public_id,
         thumbnail: thumbnailUploadResult.secure_url,
         thumbnailPublicId: thumbnailUploadResult.public_id,
         owner: userId
-    })
+    });
 
     const savedVideo = await newVideo.save()
     if (!savedVideo) {
@@ -139,8 +142,10 @@ const publishAVideo = asyncHandler(async (req, res) => {
     }
 
     // Populate user details
-    const populatedVideo = await Video.findById(savedVideo._id)
-        .populate("owner", "username avatar");
+    const populatedVideo = await Video.findById(savedVideo._id).populate("owner", "username avatar");
+
+
+    //database 
     res.status(201).json(
         new ApiResponse(201, populatedVideo, "Video published successfully")
     )
