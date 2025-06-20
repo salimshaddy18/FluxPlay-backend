@@ -81,7 +81,7 @@ const addComment = asyncHandler(async (req, res) => {
     }
 
     const newComment = await Comment.create({
-        content,
+        comment: content,
         video: videoId,
         user: userId
     })
@@ -102,23 +102,21 @@ const updateComment = asyncHandler(async (req, res) => {
     }
 
     const comment = await Comment.findById(commentId)
-
     if (!comment) {
         throw new ApiError(404, "Comment not found")
     }
 
     if (comment.user.toString() !== userId.toString()) {
-        throw new ApiError(403, "You can only edit your own comment")
+        throw new ApiError(403, "You can only update your own comment")
     }
 
-    comment.content = content || comment.content
+    comment.comment = content
     await comment.save()
 
     res.status(200).json(
         new ApiResponse(200, comment, "Comment updated successfully")
     )
 })
-
 
 //delete a comment
 const deleteComment = asyncHandler(async (req, res) => {
