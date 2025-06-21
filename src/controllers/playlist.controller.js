@@ -8,7 +8,6 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 //create playlist
 const createPlaylist = asyncHandler(async (req, res) => {
     const { name, description } = req.body;
-    const videoId = req.params.videoId;
     const userId = req.user._id;
 
     if (!isValidObjectId(userId)) {
@@ -23,25 +22,9 @@ const createPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Playlist description is required");
     }
 
-    let videos = [];
-
-    if (videoId) {
-        if (!isValidObjectId(videoId)) {
-            throw new ApiError(400, "Invalid video ID");
-        }
-
-        const videoExists = await Video.findById(videoId);
-        if (!videoExists) {
-            throw new ApiError(404, "Video not found");
-        }
-
-        videos.push(videoId);
-    }
-
     const newPlaylist = await Playlist.create({
         name: name.trim(),
         description: description.trim(),
-        videos,
         owner: userId
     });
 
