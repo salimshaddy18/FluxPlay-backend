@@ -7,7 +7,10 @@ import {
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    videoIncrementlikes,
+    videoDecrementlikes,
+    incrementVideoViews
 } from "../controllers/video.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -39,6 +42,12 @@ router.route("/update-video/:videoId").patch(verifyJWT, upload.single("thumbnail
 router.route('/delete-video/:videoId').delete(verifyJWT, deleteVideo)
 
 router.route("/toggle/publish/:videoId").patch(verifyJWT, togglePublishStatus);
+
+router.route("/incrementLike/:videoId").get(verifyJWT, videoIncrementlikes);
+
+router.route("/decrementLike/:videoId").get(verifyJWT, videoDecrementlikes);
+
+router.route("/incrementViews/:videoId").patch(verifyJWT, incrementVideoViews);
 
 export default router
 

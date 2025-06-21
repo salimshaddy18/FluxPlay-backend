@@ -4,6 +4,8 @@ import {
     deleteComment,
     getVideoComments,
     updateComment,
+    commentIncrementlikes,
+    commentDecrementlikes
 } from "../controllers/comment.controller.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 
@@ -13,5 +15,7 @@ router.use(verifyJWT);
 
 router.route("/:videoId").get(getVideoComments).post(addComment);
 router.route("/c/:commentId").delete(deleteComment).patch(updateComment);
+router.route("/incrementLikes/:commentId").patch(commentIncrementlikes);
+router.route("/decrementLikes/:commentId").patch(commentDecrementlikes);
 
 export default router

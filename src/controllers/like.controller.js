@@ -16,13 +16,13 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 
     const userId = req.user._id;
 
-    const existingLike = await Like.findOne({ video: videoId, likedBy: userId });
+    const existingLike = await Like.findOne({ video: videoId, owner: userId });
 
     if (existingLike) {
         await Like.deleteOne({ _id: existingLike._id });
         return res.status(200).json(new ApiResponse(200, null, "Like removed successfully"));
     } else {
-        const newLike = new Like({ video: videoId, likedBy: userId });
+        const newLike = new Like({ video: videoId, owner: userId });
         await newLike.save();
         return res.status(201).json(new ApiResponse(201, newLike, "Like added successfully"));
     }
@@ -38,13 +38,13 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 
     const userId = req.user._id;
 
-    const existingLike = await Like.findOne({ comment: commentId, likedBy: userId });
+    const existingLike = await Like.findOne({ comment: commentId, owner: userId });
 
     if (existingLike) {
         await Like.deleteOne({ _id: existingLike._id });
         return res.status(200).json(new ApiResponse(200, null, "Like removed successfully"));
     } else {
-        const newLike = new Like({ comment: commentId, likedBy: userId });
+        const newLike = new Like({ comment: commentId, owner: userId });
         await newLike.save();
         return res.status(201).json(new ApiResponse(201, newLike, "Like added successfully"));
     }

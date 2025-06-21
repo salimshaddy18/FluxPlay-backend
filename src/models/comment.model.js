@@ -18,6 +18,10 @@ const commentSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    likes: {
+        type: Number,
+        default: 0
+    }
 }, { timestamps: true });
 
 export const Comment = mongoose.model("Comment", commentSchema)

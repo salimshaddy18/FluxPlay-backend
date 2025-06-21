@@ -3,6 +3,7 @@ import { Comment } from "../models/comment.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { User } from "../models/user.model.js"
 
 //get all comments for a video
 const getVideoComments = asyncHandler(async (req, res) => {
@@ -144,9 +145,66 @@ const deleteComment = asyncHandler(async (req, res) => {
     )
 })
 
+//increment like on comment
+const commentIncrementlikes = asyncHandler(async (req, res) => {
+    const { commentId } = req.params;
+    if (!commentId) {
+        throw new ApiError(400, "comment ID is required");
+    }
+    
+    const getlikes = await Comment.findById(commentId);
+    if (!getlikes) {
+        throw new ApiError(404, "comment not found");
+    }
+    
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    user.likedComments.push(commentId);
+    await user.save();
+
+    getlikes.likes += 1;
+    await getlikes.save();
+    res.status(200).json(
+        new ApiResponse(200, getlikes, "comment likes incremented successfully")
+    );
+})
+
+//decrement like on comment
+const commentDecrementlikes = asyncHandler(async (req, res) => {
+    const { commentId } = req.params;
+
+    if (!commentId) {
+        throw new ApiError(400, "comment ID is required");
+    }
+
+    const getlikes = await Comment.findById(commentId);
+    if (!getlikes) {
+        throw new ApiError(404, "comment not found");
+    }
+
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    user.likedComments = user.likedComments.filter(id => id.toString() !== commentId.toString());
+    await user.save();
+
+    getlikes.likes -= 1;
+    await getlikes.save();
+    res.status(200).json(
+        new ApiResponse(200, getlikes, "comment likes decremented successfully")
+    );
+})
+
 export {
     getVideoComments,
     addComment,
     updateComment,
-    deleteComment
+    deleteComment,
+    commentIncrementlikes,
+    commentDecrementlikes
 }

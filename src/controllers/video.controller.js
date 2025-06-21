@@ -320,6 +320,83 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     )
 })
 
+//increment likes of video
+const videoIncrementlikes = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+    const userId = req.user._id;
+    if (!videoId) {
+        throw new ApiError(400, "Video ID is required");
+    }
+
+    const getlikes = await Video.findById(videoId);
+    if (!getlikes) {
+        throw new ApiError(404, "Video not found");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    user.likedVideos.push(videoId);
+    await user.save();
+
+
+    getlikes.likes += 1;
+    await getlikes.save();
+    res.status(200).json(
+        new ApiResponse(200, getlikes, "Video likes incremented successfully")
+    );
+})
+
+//decrement likes of video
+const videoDecrementlikes = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+
+    if (!videoId) {
+        throw new ApiError(400, "Video ID is required");
+    }
+
+    const getlikes = await Video.findById(videoId);
+    if (!getlikes) {
+        throw new ApiError(404, "Video not found");
+    }
+
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    user.likedVideos = user.likedVideos.filter(id => id.toString() !== videoId.toString());
+    await user.save();
+    
+    getlikes.likes -= 1;
+    await getlikes.save();
+    res.status(200).json(
+        new ApiResponse(200, getlikes, "Video likes Decremented successfully")
+    );
+})
+
+//increment views of video
+const incrementVideoViews = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+
+    if (!videoId) {
+        throw new ApiError(400, "Video ID is required");
+    }
+
+    const video = await Video.findById(videoId);
+    if (!video) {
+        throw new ApiError(404, "Video not found");
+    }
+
+    video.views += 1;
+    await video.save();
+
+    res.status(200).json(
+        new ApiResponse(200, video, "Video views incremented successfully")
+    );
+})
+
 export {
     getAllVideos,
     publishAVideo,
@@ -328,5 +405,8 @@ export {
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    videoIncrementlikes,
+    videoDecrementlikes,
+    incrementVideoViews
 }

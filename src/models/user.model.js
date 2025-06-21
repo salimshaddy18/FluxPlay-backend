@@ -44,8 +44,19 @@ const userSchema = new Schema(
         },
         refreshToken: {
             type: String
-        }
-
+        },
+        likedVideos: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Video"
+            }
+        ],
+        likedComments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Comment"
+            }
+        ],
     },
     {
         timestamps: true
