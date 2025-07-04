@@ -10,7 +10,8 @@ import {
     togglePublishStatus,
     videoIncrementlikes,
     videoDecrementlikes,
-    incrementVideoViews
+    incrementVideoViews,
+    isVideoLiked
 } from "../controllers/video.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -48,6 +49,9 @@ router.route("/incrementLike/:videoId").get(verifyJWT, videoIncrementlikes);
 router.route("/decrementLike/:videoId").get(verifyJWT, videoDecrementlikes);
 
 router.route("/incrementViews/:videoId").patch(verifyJWT, incrementVideoViews);
+
+router.get("/is-liked/:videoId", verifyJWT, isVideoLiked);
+
 
 export default router
 

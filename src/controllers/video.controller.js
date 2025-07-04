@@ -405,6 +405,19 @@ const incrementVideoViews = asyncHandler(async (req, res) => {
     );
 })
 
+// Check if user liked a video
+const isVideoLiked = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+    if (!user) throw new ApiError(404, "User not found");
+
+    const liked = user.likedVideos.includes(videoId);
+    res.status(200).json(new ApiResponse(200, liked, "Like status fetched"));
+});
+
+
 export {
     getAllVideos,
     publishAVideo,
@@ -416,5 +429,6 @@ export {
     togglePublishStatus,
     videoIncrementlikes,
     videoDecrementlikes,
-    incrementVideoViews
+    incrementVideoViews,
+    isVideoLiked
 }
