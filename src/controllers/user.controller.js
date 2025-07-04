@@ -475,6 +475,25 @@ const getWatchHistory = asyncHandler(async (req, res) => {
         )
 })
 
+const getLikedVideos = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const user = await User.findById(userId)
+    .populate({
+      path: "likedVideos",
+      populate: { path: "owner", select: "username avatar" },
+      select: "title thumbnail views likes createdAt",
+    });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  res.status(200).json(
+    new ApiResponse(200, user.likedVideos, "Liked videos fetched successfully")
+  );
+});
+
 
 
 export {
@@ -488,5 +507,6 @@ export {
     updateUserAvatar,
     updateUserCoverImage,
     getUserChannelProfile,
-    getWatchHistory
+    getWatchHistory,
+    getLikedVideos
 }
