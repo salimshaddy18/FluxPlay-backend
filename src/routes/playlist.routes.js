@@ -14,7 +14,7 @@ const router = Router();
 
 router.use(verifyJWT);
 
-router.route("/").post(createPlaylist)
+router.post("/", verifyJWT, createPlaylist);
 
 router
     .route("/:playlistId")
