@@ -82,40 +82,13 @@ const addComment = asyncHandler(async (req, res) => {
     }
 
     const newComment = await Comment.create({
-        comment: content,
+        content,
         video: videoId,
         user: userId
     })
 
     res.status(201).json(
         new ApiResponse(201, newComment, "Comment added successfully")
-    )
-})
-
-//update a comment
-const updateComment = asyncHandler(async (req, res) => {
-    const { commentId } = req.params
-    const { content } = req.body
-    const userId = req.user._id
-
-    if (!mongoose.Types.ObjectId.isValid(commentId)) {
-        throw new ApiError(400, "Invalid comment ID")
-    }
-
-    const comment = await Comment.findById(commentId)
-    if (!comment) {
-        throw new ApiError(404, "Comment not found")
-    }
-
-    if (comment.user.toString() !== userId.toString()) {
-        throw new ApiError(403, "You can only update your own comment")
-    }
-
-    comment.comment = content
-    await comment.save()
-
-    res.status(200).json(
-        new ApiResponse(200, comment, "Comment updated successfully")
     )
 })
 
@@ -145,66 +118,8 @@ const deleteComment = asyncHandler(async (req, res) => {
     )
 })
 
-//increment like on comment
-const commentIncrementlikes = asyncHandler(async (req, res) => {
-    const { commentId } = req.params;
-    if (!commentId) {
-        throw new ApiError(400, "comment ID is required");
-    }
-    
-    const getlikes = await Comment.findById(commentId);
-    if (!getlikes) {
-        throw new ApiError(404, "comment not found");
-    }
-    
-    const userId = req.user._id;
-    const user = await User.findById(userId);
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-    user.likedComments.push(commentId);
-    await user.save();
-
-    getlikes.likes += 1;
-    await getlikes.save();
-    res.status(200).json(
-        new ApiResponse(200, getlikes, "comment likes incremented successfully")
-    );
-})
-
-//decrement like on comment
-const commentDecrementlikes = asyncHandler(async (req, res) => {
-    const { commentId } = req.params;
-
-    if (!commentId) {
-        throw new ApiError(400, "comment ID is required");
-    }
-
-    const getlikes = await Comment.findById(commentId);
-    if (!getlikes) {
-        throw new ApiError(404, "comment not found");
-    }
-
-    const userId = req.user._id;
-    const user = await User.findById(userId);
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-    user.likedComments = user.likedComments.filter(id => id.toString() !== commentId.toString());
-    await user.save();
-
-    getlikes.likes -= 1;
-    await getlikes.save();
-    res.status(200).json(
-        new ApiResponse(200, getlikes, "comment likes decremented successfully")
-    );
-})
-
 export {
     getVideoComments,
     addComment,
-    updateComment,
-    deleteComment,
-    commentIncrementlikes,
-    commentDecrementlikes
+    deleteComment
 }

@@ -5,23 +5,15 @@ const commentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Video"
     },
-    comment: {
+    content: {
         type: String,
-        ref: "Comment"
-    },
-    likedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        required: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
-    likes: {
-        type: Number,
-        default: 0
-    }
 }, { timestamps: true });
 
 export const Comment = mongoose.model("Comment", commentSchema)
