@@ -61,9 +61,15 @@ const checkIsSubscribed = asyncHandler(async (req, res) => {
         subscriber: subscriberId,
         channel: channelId,
     });
-
+    let check = false
+    if(isSubscribed) {
+        check = true;
+    }
     return res.status(200).json(
-        { message: "Subscription status fetched" }
+        {
+            message: "Subscription status fetched",
+            data: check
+        }
     );
 });
 
