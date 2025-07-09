@@ -9,6 +9,8 @@ dotenv.config({ path: './.env' })
 
 connectDB()
     .then(() => {
+        console.log(process.env.NODE_ENV);
+        
         if (process.env.NODE_ENV !== "production") {
             app.listen(8000, () => console.log("Running locally at http://localhost:8000"));
         }
@@ -16,6 +18,7 @@ connectDB()
             console.error("Error connecting to MongoDB:", error);
             throw error;
         });
+
     })
     .catch((err) => {
         console.log("Error connecting to MongoDB:", err);
