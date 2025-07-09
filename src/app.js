@@ -30,5 +30,9 @@ app.use("/api/v1/videos", videoRouter)
 app.use("/api/v1/comments", commentRouter)
 app.use("/api/v1/playlists", playlistRouter)
 app.use("/api/v1/search", searchRouter);
+app.get("/ping", (req, res) => {
+  res.send("pong!");
+});
+
 
 export { app }
