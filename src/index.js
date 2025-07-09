@@ -21,7 +21,8 @@ connectDB()
     console.log("Error connecting to MongoDB:", err);
 })
 
-export const handler = serverless(app)
+// export const handler = serverless(app)
+export default serverless(app)
 
 
 
