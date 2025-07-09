@@ -1,5 +1,5 @@
 //require('dotenv').config({path: './env'})
-
+import serverless from "serverless-http";
 
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
@@ -20,6 +20,8 @@ connectDB()
 .catch((err) => {   
     console.log("Error connecting to MongoDB:", err);
 })
+
+export const handler = serverless(app)
 
 
 
