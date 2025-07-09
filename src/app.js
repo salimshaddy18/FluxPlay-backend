@@ -31,4 +31,7 @@ app.use("/api/v1/comments", commentRouter)
 app.use("/api/v1/playlists", playlistRouter)
 app.use("/api/v1/search", searchRouter);
 
+app.get("/", (req, res) => {
+  res.send("Hello from Express on Vercel!");
+});
 export { app }
