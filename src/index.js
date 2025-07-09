@@ -8,18 +8,18 @@ import { app } from "./app.js";
 dotenv.config({ path: './.env' })
 
 connectDB()
-.then(() => {
-    app.listen(process.env.PORT || 8000, () => {
-        console.log(`App is running on port: ${process.env.PORT}`);
-    });
-    app.on("error", (error) => {
-        console.error("Error connecting to MongoDB:", error);
-        throw error;
-    });
-})
-.catch((err) => {   
-    console.log("Error connecting to MongoDB:", err);
-})
+    .then(() => {
+        if (process.env.NODE_ENV !== "production") {
+            app.listen(8000, () => console.log("Running locally at http://localhost:8000"));
+        }
+        app.on("error", (error) => {
+            console.error("Error connecting to MongoDB:", error);
+            throw error;
+        });
+    })
+    .catch((err) => {
+        console.log("Error connecting to MongoDB:", err);
+    })
 
 // export const handler = serverless(app)
 export default serverless(app)
