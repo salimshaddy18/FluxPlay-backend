@@ -206,7 +206,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
         const options = {
             httpOnly: true,
-            secure: true
+            secure: true,
+            sameSite: "Lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         }
 
         const { accessToken, newRefreshToken } = await generateAccessAndRefereshTokens(user._id)
@@ -215,6 +217,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             .status(200)
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", newRefreshToken, options)
+            .cookie("name", "rohan", options)
             .json(
                 new ApiResponse(
                     200,
