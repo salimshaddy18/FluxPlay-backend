@@ -116,6 +116,8 @@ A high-performance, scalable backend API for a modern video streaming platform i
 
 The server will start on `http://localhost:8000`
 
+## 🚀 Frontend github link: `https://github.com/salimshaddy18/fluxplayfrontend`
+
 ## 🔐 Authentication
 
 The API uses JWT (JSON Web Tokens) for authentication. Most endpoints require authentication via the `Authorization` header or cookies.
