@@ -6,72 +6,55 @@ A high-performance, scalable backend API for a modern video streaming platform i
 
 ### Core Functionality
 
-#### Advanced Video Management
+#### Video Managemen
 
-- **Multi-format Video Support**: Upload and stream videos in various formats with automatic optimization
-- **Intelligent Thumbnail Generation**: Automatic thumbnail creation with custom upload options
-- **Smart Video Processing**: Duration detection, metadata extraction, and quality optimization
-- **Flexible Publishing System**: Draft, scheduled, and instant publishing with visibility controls
-- **Real-time Analytics**: View count tracking, engagement metrics, and performance insights
-- **Content Moderation**: Built-in tools for content filtering and community guidelines enforcement
+- **Real-time Analytics**: View count tracking, engagement metrics, and performance insights.
 
 #### Comprehensive User System
 
 - **Secure Authentication**: JWT-based authentication with refresh token rotation for enhanced security
 - **Profile Customization**: Rich user profiles with avatars, cover images, and customizable bios
 - **Channel Management**: Professional channel setup with subscriber analytics and content organization
-- **Privacy Controls**: Granular privacy settings for videos, playlists, and user data
 - **Multi-device Support**: Seamless authentication across devices with session management
 
 #### Social Engagement Features
 
 - **Interactive Comments**: Threaded comments with like/dislike functionality and moderation tools
-- **Community Building**: Subscription system with notification preferences and channel recommendations
-- **Content Discovery**: Advanced search algorithms with filters for videos, channels, and playlists
-- **Personalization**: AI-driven recommendations based on watch history and user preferences
-- **Social Sharing**: Built-in sharing capabilities with privacy controls
+- **Community Building**: Subscription system
+- **Content Discovery**: Advanced search algorithms with filters for videos, and channel
 
 #### Content Organization
 
-- **Smart Playlists**: Create, organize, and share playlists with collaborative editing
-- **Watch History**: Intelligent tracking with privacy controls and export capabilities
+- **Playlists**: Create, organize, and share playlists with collaborative editing
+- **Watch History**: Tracking with privacy
 - **Favorites System**: Like/unlike videos with personalized collections
-- **Content Categorization**: Automatic and manual tagging for better content discovery
 
 ### Technical Functionality
 
 #### 🔧 Architecture & Performance
 
-- **RESTful API Design**: Clean, intuitive endpoints following industry best practices
-- **Modular Codebase**: Well-structured MVC architecture with separation of concerns
+- **RESTful API Design**: Clean, intuitive endpoints following best practices
 - **Scalable Database**: MongoDB with Mongoose ODM for flexible data modeling
 - **Performance Optimization**: Aggregation pipelines, indexing, and query optimization
 - **Response Optimization**: Efficient API responses with pagination support
-- **Caching Strategy**: Intelligent caching for frequently accessed data
 
 #### 🛡️ Security & Authentication
 
 - **JWT Authentication**: Secure token-based authentication with automatic refresh
-- **Password Security**: bcrypt hashing with configurable salt rounds
+- **Password Security**: bcrypt hashing
 - **CORS Protection**: Configurable cross-origin resource sharing policies
 - **Input Validation**: Comprehensive request validation and sanitization
-- **Rate Limiting**: Protection against abuse and DDoS attacks
 - **File Upload Security**: Secure file handling with type validation and size limits
 
 #### ☁️ Cloud & Storage
 
 - **Cloudinary Integration**: Seamless video and image storage with automatic optimization
-- **CDN Support**: Global content delivery for fast video streaming
-- **File Processing**: Automatic format conversion and quality optimization
-- **Backup & Recovery**: Reliable data backup and disaster recovery systems
 - **Multi-format Support**: Handle various video and image formats with automatic conversion
 
 #### 📊 Monitoring & Error Handling
 
 - **Error Handling**: Centralized error management with detailed logging
-- **Real-time Monitoring**: Comprehensive logging and performance metrics
 - **Database Performance**: Optimized queries with aggregation pipelines
-- **Debugging Tools**: Advanced debugging and troubleshooting capabilities
 - **Health Checks**: System health monitoring and automated recovery
 
 ## 🛠️ Tech Stack
